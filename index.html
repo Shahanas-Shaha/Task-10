@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Task-10</title>
+        <script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react@16.7.0-alpha.0/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16.7.0-alpha.0/umd/react-dom.development.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Open+sans|Montserrat|Raleway|Muli" rel="stylesheet">
+    </head>
+    <style>
+        html, body{
+  height: 100%;
+  margin:0;
+  background:url("https://wallpaperaccess.com/full/1092758.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center;
+  font-family: "poppins";
+}
+
+  body {
+    align-items: center;
+ }
+ .main{
+    box-shadow: 0 0 15px #3e4780;
+    margin-left:20vw;
+    border-radius: 10px;
+    width:50%;
+    background-color: white;
+ }
+ 
+.flex{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.input-main{
+  margin: 18px;
+  border-color: #12194a;
+}
+.btn{
+  width:10vw;
+  height:5vh;
+  margin-top: 18px;
+  margin-left:5vh;
+  background:#3b4480;
+  color: white;
+  padding: 4px 8px;
+  font-size:25px;
+  font-weight: bold;
+  border-radius: 10px;
+  border:none;
+  display: inline-block;
+}
+input[type="text"]{
+  border-radius:20px;
+  border: solid 10px #232a59;
+  padding-left: 4px;
+  padding-top: 2vh;
+  width: 20vw;
+  margin-top:2vh;
+  font-size:25px;
+  color:#12194a;
+}
+.list{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  }
+.todo-main{
+  margin-bottom:5px;
+  width: 30%;
+  display: flex;
+   }
+
+.fa-times{
+  color: #ff4444;
+  font-size: 30px;
+  margin-left:13vh;
+  margin-top: -2px;
+  }
+.main-checkbox {
+  display: flex;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 20px;
+  }
+.main-checkbox input {
+  position: absolute;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+ .checkmark {
+  position: absolute;
+  top: 1px;
+  left: 0;
+  height: 13px;
+  width: 13px;
+  border: solid 2px #ff4444;
+  background-color:#ff4444;
+  border-radius: 50%;
+  transition: 0.1s;
+}
+.main-checkbox input:checked ~ .checkmark {
+  background-color:#13ba21;
+  border:solid 2px #13ba21;
+  width: 16px;
+  height: 16px;
+}
+    </style>
+    <body>
+        <h1 style=color:white;font-size:70px;>THINGS TO DO</h1>
+        <div id="todoapp">k</div>
+        
+<script type="text/babel">
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      todos: [{id: 0, task: "add item 1", completed: false}],
+      currentTodo: ''
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.addTask = this.addTask.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+  handleChange(id){
+
+    this.setState(prevState => {
+      const updated = prevState.todos.map(todo => {
+        if(todo.id === id){
+          todo.completed = !todo.completed
+        }
+        return todo
+      })
+      
+      return{
+        todos: updated
+      }
+    });
+  }
+  handleInputChange(e){
+    this.setState({
+      currentTodo: e.target.value
+    })
+  }
+  addTask(){
+    let task = this.state.currentTodo,
+        id = this.state.todos.length + 1,
+        completed = false;
+
+    this.setState(prevState => {
+      const newUpdated = prevState.todos;
+      newUpdated.push({id, task, completed});
+      return{
+        todos: newUpdated
+      }
+    });
+    let todos = this.state.todos;
+    for (var i = 0; i < todos.length; i++) {
+     todos[i].id = i
+    }
+    this.setState({
+      todos: todos
+    })
+
+  }
+  handleDelete(e){
+    let id = e.target.id;
+    let abc = this.state.todos;
+    let arr2 =[];
+
+    for (var i = 0; i < abc.length; i++) {
+      if(abc[i].id == id){
+        arr2.push(i);
+      }
+    }
+
+   let todos = this.state.todos;
+    todos.splice(arr2[arr2.length - 1], 1);
+    this.setState({
+      todos: todos
+    })
+    for (let i = 0; i < todos.length; i++) {
+     todos[i].id = i
+    }
+    this.setState({
+      todos: todos
+    })
+
+  }
+
+  render(){
+    const list = this.state.todos.map(item => (
+      <Todos key={item.id} task={item.task} completed={item.completed} id={item.id} uniqueId={item.id} handleChange={this.handleChange} onDelete={this.handleDelete}/>
+    ));
+      return(
+        <div className="main">
+          <div className="input-main flex">
+            <input type="text" onChange={this.handleInputChange} placeholder="New Item"/>
+            <button className="btn" onClick={this.addTask}>Add</button>
+          </div>
+          <div className="list">
+            {list}
+          </div>
+
+        </div>
+      )
+  }
+
+}
+
+
+let styles = {
+  textDecoration: 'none'
+}
+const Todos = (props) => {
+    return(
+      <div className="todo-main flex">
+      <label class="main-checkbox">
+        <span className="text-task" style={props.completed ? styles : null}>{props.task}</span>
+        <input type="checkbox" checked={props.completed} onChange={() => props.handleChange(props.id)}/>
+        <span class="checkmark"></span>
+      </label>
+      <i class="fa fa-times" onClick={props.onDelete} id={props.uniqueId}></i>
+
+      </div>
+    );
+
+}
+
+
+
+ReactDOM.render(<App />, document.getElementById('todoapp'));
+    </script>
+    </body>
+</html>
